@@ -1,0 +1,51 @@
+{
+  "id": "1907973",
+  "name": "杰哥图标库",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "1490638",
+      "name": "搜索",
+      "font_class": "sousuo",
+      "unicode": "e653",
+      "unicode_decimal": 58963
+    },
+    {
+      "icon_id": "7766787",
+      "name": "icon_principal",
+      "font_class": "icon_principal",
+      "unicode": "eb9c",
+      "unicode_decimal": 60316
+    },
+    {
+      "icon_id": "9559069",
+      "name": "搜索",
+      "font_class": "ziyuan",
+      "unicode": "e61d",
+      "unicode_decimal": 58909
+    },
+    {
+      "icon_id": "15011217",
+      "name": "首页",
+      "font_class": "shouye",
+      "unicode": "e609",
+      "unicode_decimal": 58889
+    },
+    {
+      "icon_id": "15013580",
+      "name": "设置",
+      "font_class": "shezhi",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    },
+    {
+      "icon_id": "15474056",
+      "name": "退出",
+      "font_class": "tuichu",
+      "unicode": "e668",
+      "unicode_decimal": 58984
+    }
+  ]
+}

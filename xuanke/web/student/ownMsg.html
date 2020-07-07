@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link href="../css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="../css/select.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="../js/jquery.js"></script>
+    <script type="text/javascript" src="../js/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/jquery.idTabs.min.js"></script>
+    <script type="text/javascript" src="../js/select-ui.min.js"></script>
+    <script type="text/javascript" src="../editor/kindeditor.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+        <li><a href="#">个人信息</a></li>
+        <li><a href="#">信息修改</a></li>
+    </ul>
+</div>
+
+<div class="formbody">
+
+    <div class="formtitle"><span>基本信息</span></div>
+    <form id="ownForm" method="post">
+    <ul class="forminfo">
+        <li><label>账号：</label><input id="own_account" name="account" type="text" class="dfinput" disabled/></li>
+        <li><label>密码：</label><input id="own_password" name="password" type="text" class="dfinput" /><i id="error_password" style="color: red"></i></li>
+        <li><label>姓名：</label><input id="own_name" name="name" type="text" class="dfinput" /></li>
+        <li><label>性别：</label><input id="own_sex" name="sex" type="text" class="dfinput" /><i id="error_sex" style="color: red"></i></li>
+        <li><label>年龄：</label><input id="own_age" name="age" type="text" class="dfinput" /><i id="error_age" style="color: red"></i></li>
+        <li><label>Phone：</label><input id="own_phone" name="phone" type="text" class="dfinput" /><i id="error_phone" style="color: red"></i></li>
+        <li><label>E-mail：</label><input id="own_email" name="email" type="text" class="dfinput" placeholder="输入合法有效的邮箱地址"/><i id="error_email" style="color: red"></i></li>
+        <li><label>班级：</label><input id="own_classname" name="classname" type="text" class="dfinput" /></li>
+        <li><label>院系：</label><input id="own_department" name="department" type="text" class="dfinput" disabled/></li>
+        <li><label>&nbsp;</label><input onclick="updateMsg()" name="" type="button" class="btn" value="提交修改"/></li>
+    </ul>
+
+        <input type="hidden" name="id" value="" id="own_id">
+    </form>
+</div>
+
+
+<div class="formbody" style="float: right;margin-top: -537px">
+
+    <div class="formtitle"><span>头像修改</span></div>
+    <form action="../imageUpload.do" method="post" enctype="multipart/form-data" onsubmit="return check()">
+        <ul class="forminfo">
+            <li><label>我的头像：</label><img id="own_img" src="" style="width: 130px;height: 130px;border-radius: 50%;"></li>
+            <li><label>图片选择：</label><input style="margin-top: 20px" id="file" name="file"  type="file" value=""/></li>
+            <li><i id="" style=""> 导航头像刷新后同步</i></li>
+            <li><i id="errormsg" style="color: red"></i></li>
+            <li><label>&nbsp;</label><input type="submit" class="btn" value="上传"/></li>
+        </ul>
+        <input type="hidden" name="id" id="id" value="">
+        <input type="hidden" name="identity" id="identity" value="">
+    </form>
+</div>
+<script>
+    //校验性别，只能为男或女
+    function checkSex() {
+        //拿到
+        var sex = $("#own_sex").val();
+        //进行校验
+        var flag ;
+        if(sex=='男' || sex=='女'){
+            flag=true;
+        }else {
+            flag=false;
+        }
+        //根据结果修改表单样式
+        if (flag) {
+            $("#own_sex").css("border", "");
+            $("#error_sex").html("");
+        } else {
+            $("#own_sex").css("border", "1px solid red")
+            $("#error_sex").html("请输入'男'或'女'！");
+        }
+        return flag;
+    };   //绑定离焦事件
+    $("#own_sex").blur(checkSex);
+    //校验年龄，只能为数字
+    function checkAge() {
+        //拿到
+        var age = $("#own_age").val();
+        //一个正则表达式
+        var check_age = /^[0-9]*$/;
+        //进行校验
+        var flag = check_age.test(age);
+        //根据结果修改表单样式
+        if (flag) {
+            $("#own_age").css("border", "");
+            $("#error_age").html("");
+        } else {
+            $("#own_age").css("border", "1px solid red")
+            $("#error_age").html("请输入正确格式！");
+        }
+        return flag;
+    };
+    //绑定离焦事件
+    $("#own_age").blur(checkAge);
+    //校验手机号，只能为数字
+    function checkPhone() {
+        //拿到
+        var phone = $("#own_phone").val();
+        //一个正则表达式
+        var check_phone = /^[0-9]*$/;
+        //进行校验
+        var flag = check_phone.test(phone);
+        //根据结果修改表单样式
+        if (flag) {
+            $("#own_phone").css("border", "");
+            $("#error_phone").html("");
+        } else {
+            $("#own_phone").css("border", "1px solid red")
+            $("#error_phone").html("请输入数字！");
+        }
+        return flag;
+    };
+    //绑定离焦事件
+    $("#own_phone").blur(checkPhone);
+    //校验密码
+    function checkpassword() {
+        //拿到
+        var password = $("#own_password").val();
+        //一个正则表达式
+        var check_password = /^\w{6,20}$/;
+        //进行校验
+        var flag = check_password.test(password);
+        //根据结果修改表单样式
+        if (flag) {
+            $("#own_password").css("border", "");
+            $("#error_password").html("");
+        } else {
+            $("#own_password").css("border", "1px solid red")
+            $("#error_password").html("密码格式错误，请重新输入6-20位数字和字母！");
+        }
+        return flag;
+    };
+    //绑定离焦事件
+    $("#own_password").blur(checkpassword);
+    //校验邮箱
+    function checkemail() {
+        //拿到
+        var email = $("#own_email").val();
+        //一个正则表达式
+        var check_email = /^\w+@\w+\.\w+$/;
+        //进行校验
+        var flag = check_email.test(email);
+        //根据结果修改表单样式
+        if (flag) {
+            $("#own_email").css("border", "");
+            $("#error_email").html("");
+        } else {
+            $("#own_email").css("border", "1px solid red")
+            $("#error_email").html("Email格式错误，请重新输入！");
+        }
+        return flag;
+    };
+    //绑定离焦事件
+    $("#own_email").blur(checkemail);
+
+
+
+
+ $(function () {
+     //图片检查
+     function check(){
+         var file=$("#file").val();
+         if (file==""){
+             $("#errormsg").html("请选择图片！")
+             return false;
+         }
+         var arr=file.split(".");
+         var type=arr[1];
+         if (type!="png" && type!="jpg" && type!="bmp") {
+             $("#errormsg").html("请选择png、jpg、bmp格式的图片！")
+             return false;
+         }
+         if(file.length==0 || file==""){
+             $("#errormsg").html("请选择上传文件")
+             return false;
+         }
+         var filesize = document.getElementById("file").files[0]
+
+         var size=filesize.size;
+         if (size > (1024*1024)){
+             $("#errormsg").html("请选择1M大小以内的图片！")
+             return false;
+         }
+         $("#errormsg").html("")
+         return true;
+     }
+
+
+     //初始化数据
+    $.get("../getSession.do",function (data) {
+        if (data.flag){
+            var sid=data.data.id;
+            $("#own_id").val(sid);
+            $("#id").val(sid);
+            $("#identity").val(data.data.identity);
+            $.ajax({
+                type:"get",
+                url:"../student/getStudentById.do",
+                data:{sid},
+                contentType:"application/json;charset=utf-8",
+                success:function (data) {
+                    console.log();
+                    if(data.flag){
+                        $("#own_account").val(data.data[0].account);
+                        $("#own_password").val(data.data[0].password);
+                        $("#own_name").val(data.data[0].name);
+                        $("#own_sex").val(data.data[0].sex);
+                        $("#own_phone").val(data.data[0].phone);
+                        $("#own_email").val(data.data[0].email);
+                        $("#own_department").val(data.data[0].department);
+                        $("#own_classname").val(data.data[0].classname);
+                        $("#own_age").val(data.data[0].age);
+                        $("#own_img").attr("src",`../upload/${data.data[0].image}`);
+                    }
+                }
+            })
+        }
+    },"json");
+ });
+
+ //提交信息进行修改
+function updateMsg() {
+    if (checkSex()&&checkemail()&&checkpassword()&&checkAge()&&checkPhone()) {
+        $.ajax({
+            type: "get",
+            url: "../student/updateMsg.do",
+            data: $("#ownForm").serialize(),
+            contentType: "application/json;charset=utf-8",
+            success: function (data) {
+                console.log();
+                if (data.flag) {
+                    alert(data.msg);
+                    location.href = "../student/ownMsg.html";
+                }
+            }
+
+        });
+    }
+}
+
+</script>
+</body>
+</html>

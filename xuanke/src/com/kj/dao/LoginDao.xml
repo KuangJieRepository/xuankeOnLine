@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis. org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kj.dao.LoginDao">
+    <!--查询用户-->
+    <select id="findUser" parameterType="string" resultType="User">
+        select * from
+        <if test="identity=='student'">
+            student
+        </if>
+        <if test="identity=='teacher'">
+            teacher
+        </if>
+        <if test="identity=='admin'">
+            admin
+        </if>
+        where account=#{account}
+        and password=#{password}
+    </select>
+
+    <!--将文件名写入数据库-->
+    <update id="setImage">
+        update
+        <if test="identity=='student'">
+            student
+        </if>
+        <if test="identity=='teacher'">
+            teacher
+        </if>
+        <if test="identity=='admin'">
+            admin
+        </if>
+        set image=#{originalFilename} where id=#{id}
+    </update>
+</mapper>

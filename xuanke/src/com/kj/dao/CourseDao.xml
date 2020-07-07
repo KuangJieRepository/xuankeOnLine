@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis. org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kj.dao.CourseDao">
+    <!--教师添加课程-->
+    <insert id="addCourseT">
+        insert into course(coursename,time,category,department,credit,t_id)
+        values(#{coursename},#{time},#{category},#{department},#{credit},#{teacher_id})
+    </insert>
+    <!--学生选择课程-->
+    <insert id="addMyCourse">
+        insert into s_c(s_id,c_id) values(#{s_id},#{c_id})
+    </insert>
+    <!--管理员添加课程-->
+    <insert id="addCourseAdmin">
+        insert into course(coursename,time,category,department,credit,t_id)
+        values(#{coursename},#{time},#{category},#{department},#{credit},#{tid})
+    </insert>
+    <!--根据课程id和教师id修改课程信息-->
+    <update id="updateCourseById">
+    update course
+    <set>
+        <if test="coursename!=''">
+            coursename=#{coursename},
+        </if>
+        <if test="time!=''">
+            time=#{time},
+        </if>
+        <if test="category!=''">
+            category=#{category},
+        </if>
+        <if test="department!=''">
+            department=#{department},
+        </if>
+        <if test="credit!=''">
+            credit=#{credit},
+        </if>
+    </set>
+      where id=#{course_id} and t_id=#{teacher_id}
+
+
+
+
+
+    </update>
+    <!--教师根据删除自己的课程-->
+    <delete id="deleteCourse">
+        delete from course where id=#{id}
+    </delete>
+    <!--学生删除自己的课程-->
+    <delete id="deleteCourseStudent">
+        delete from s_c where c_id=#{id} and s_id=#{ownid}
+
+    </delete>
+    <!--    <select id="findCourseByCondition" resultMap="courseWithTeacher">-->
+    <!--    select course.*,teacher.name from course,teacher where course.t_id=teacher.id-->
+    <!--    <if test="coursename==null">-->
+    <!--        and coursename-->
+    <!--    </if>-->
+    <!--   </select>-->
+    <!--    <resultMap id="courseWithTeacher" type="Teacher">-->
+    <!--        <id property="id" column="id"/>-->
+    <!--        <result property="name" column="name"/>-->
+    <!--        <collection property="courseList" ofType="Course">-->
+    <!--            <id property="id" column="id"/>-->
+    <!--            <result property="coursename" column="coursename"/>-->
+    <!--            <result property="time" column="time"/>-->
+    <!--            <result property="department" column="department"/>-->
+    <!--            <result property="category" column="category"/>-->
+    <!--            <result property="credit" column="credit"/>-->
+    <!--        </collection>-->
+    <!--    </resultMap>-->
+    <select id="findCourseByCondition" resultType="Course">
+        select a.*,b.name as t_name
+        from course as a,teacher as b
+        <where>
+            a.t_id=b.id
+            <if test="coursename!=null and coursename!=''">
+                and coursename like "%"#{coursename}"%"
+            </if>
+            <if test="t_name!=null and t_name!=''">
+                and b.name like "%"#{t_name}"%"
+            </if>
+            <if test="department!=null and department!=''">
+                and a.department=#{department}
+            </if>
+            <if test="category!=null and category!=''">
+                and category=#{category}
+            </if>
+        </where>
+        limit #{start},#{size}
+    </select>
+
+    <!--查记录总数-->
+    <select id="getCount" parameterType="string" resultType="int">
+        select count(*) from course,teacher
+        <where>
+            course.t_id=teacher.id
+            <if test="coursename!=null and coursename!=''">
+                and coursename like "%"#{coursename}"%"
+            </if>
+            <if test="t_name!=null and t_name!=''">
+                and teacher.name like "%"#{t_name}"%"
+            </if>
+            <if test="category!=null and category!=''">
+                and category=#{category}
+            </if>
+            <if test="department!=null and department!=''">
+                and course.department=#{department}
+            </if>
+        </where>
+    </select>
+    <!--根据教师的id查询课程-->
+    <select id="getCourse" parameterType="int" resultType="Course">
+        select course.* from course where t_id=#{t_id};
+    </select>
+    <!--根据课程id查询课程信息-->
+    <select id="getCourseById" parameterType="int" resultType="Course">
+        select* from course where id=#{id}
+    </select>
+    <!--对课程查询，判断该课程是否已经存在-->
+    <select id="findCourseOnly" resultType="Course">
+        select *
+        from course
+        where coursename=#{coursename}
+        and category=#{category}
+        and department=#{department}
+        and credit=#{credit}
+        and t_id=#{teacher_id}
+    </select>
+    <!--学生查询自己的课程-->
+    <select id="getCourseS" parameterType="int" resultType="Course">
+        select course.*,teacher.name as t_name
+        from course,teacher
+        where course.t_id=teacher.id
+        and course.id in(
+        select course.id
+        from course,student,s_c
+        where s_c.c_id=course.id
+        and s_c.s_id=student.id
+        and student.id=#{id})
+    </select>
+    <!--管理员添加课程，判断课程是否唯一-->
+    <select id="findCourseOnlyAdmin" resultType="Course">
+        select *
+        from course
+        where coursename=#{coursename}
+        and category=#{category}
+        and department=#{department}
+        and credit=#{credit}
+        and t_id in (
+        select id
+        from teacher
+        where account =#{teacher_account})
+    </select>
+
+
+    <!--判断该课程是否已经加入过-->
+    <select id="check" resultType="java.lang.Integer">
+        select count(*) from s_c where c_id=#{c_id} and s_id=#{s_id}
+    </select>
+    <!--管理员添加课程,根据teacher_account，查询出教师id，设置添加的课程中-->
+    <select id="findId" resultType="java.lang.Integer">
+        select id from teacher where account=#{teacher_account}
+    </select>
+    <!--查询全部数据，导出Excel表格-->
+    <select id="getAllCourse" resultType="com.kj.export.CourseExport">
+        select a.coursename,a.department,a.time,a.category,a.credit,b.name as t_name
+        from course as a,teacher as b
+        where a.t_id=b.id
+    </select>
+</mapper>

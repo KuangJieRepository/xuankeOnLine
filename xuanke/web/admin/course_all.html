@@ -1,0 +1,545 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link href="../css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="../css/select.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="../js/jquery.js"></script>
+    <script type="text/javascript" src="../js/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/jquery.idTabs.min.js"></script>
+    <script type="text/javascript" src="../js/select-ui.min.js"></script>
+    <script type="text/javascript" src="../editor/kindeditor.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function (e) {
+            $(".select1").uedSelect({
+                width: 345
+            });
+            $(".select2").uedSelect({
+                width: 157
+            });
+            $(".select3").uedSelect({
+                width: 130
+            });
+            $(".select4").uedSelect({
+                width: 60
+            });
+        });
+    </script>
+</head>
+
+
+<body>
+
+<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+        <li><a href="#">课程管理</a></li>
+        <li><a href="../admin/course_all.html">全部课程</a></li>
+    </ul>
+
+    <span style="padding-left: 250px;color: red" id="errormsg"></span>
+</div>
+<div class="rightinfo">
+
+
+
+</div>
+<div class="rightinfo">
+
+    <!--模糊搜索-->
+    <div class="tools">
+        <ul class="seachform" style="" >
+            <li><label>条数</label>
+                <div class="vocation">
+                    <select class="select4" name="department" id="number" onchange="numberChange()">
+                        <option value="5">5</option>
+                        <option value="10" selected="selected">10</option>
+                        <option value="15">15</option>
+                    </select>
+                </div>
+            </li>
+        <ul class="toolbar">
+            <li class="click"><a onclick="" href="#" class="tablelink" data-toggle="modal"
+                                 data-target="#myModal_add"><span><img src="../images/t01.png"/></span>添加课程</a>
+                <label>  </label>
+            </li>
+            <label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </label>
+        </ul>
+        <form id="condition_form">
+
+                <li><label>课程名称查询</label><input id="coursename" name="coursename" type="text" class="scinput"/></li>
+                <li><label>教师查询</label><input id="t_name" name="t_name" type="text" class="scinput"/></li>
+                <li><label>科目类别</label>
+                    <div class="vocation">
+                        <select class="select3" name="category" id="category">
+                            <option value="" selected="selected">--请选择--</option>
+                            <option>全部</option>
+                            <option>其他</option>
+                        </select>
+                    </div>
+                </li>
+
+                <li><label>院系</label>
+                    <div class="vocation">
+                        <select class="select3" name="department" id="department">
+                            <option value="" selected="selected">--请选择--</option>
+                            <option>信息工程学院</option>
+                            <option>其他</option>
+                        </select>
+                    </div>
+                </li>
+
+                <li><label>&nbsp;</label><input name="" id="search_btn" type="button" class="scbtn" value="查询"/></li>
+                <li><a href="course_all.html"><input  type="button" class="scbtn" value="返回全部"/></a></li>
+                <li><input  type="button" class="scbtn" style="width: 89px" onclick="tableToExcel()" value="全部课程导出"/></a></li>
+
+            <!--        <ul class="toolbar">-->
+            <!--            <li class="click"><span><img src="images/t01.png" /></span>添加</li>-->
+            <!--        </ul>-->
+        </form>
+        </ul>
+    </div>
+</div>
+
+    <table class="tablelist">
+        <thead>
+        <tr>
+            <th style="width:5%">编号</th>
+            <th style="width: 15%">课程名称</th>
+            <th style="width: 10%">授课教师</th>
+            <th style="width: 25%">上课时间</th>
+            <th style="width: 10%">科目</th>
+            <th style="width: 10%">所护院系</th>
+            <th style="width: 5%">学分</th>
+            <th style="width: 60px">操作</th>
+        </tr>
+        </thead>
+        <tbody id="course_list">
+<!--        <tr>-->
+<!--            <td>1</td>-->
+<!--            <td>Java程序设计</td>-->
+<!--            <td>匡杰</td>-->
+<!--            <td>星期一【上午12节】周三【下午56节】</td>-->
+<!--            <td>Java</td>-->
+<!--            <td>信息工程学院</td>-->
+<!--            <td>5</td>-->
+<!--            <td><a href="#" class="tablelink"><img src="../images/t02.png" style="height: 18px;width: 18px;"/>&nbsp;&nbsp;&nbsp;</a>-->
+<!--                <a href="#" class="tablelink"> <img src="../images/t03.png" style="height: 18px;width: 18px;"/></a></td>-->
+<!--        </tr>-->
+        </tbody>
+    </table>
+
+    <div class="pagin">
+        <div class="message" id="data_msg">共<i class="blue">1256</i>条记录，【1/19页】</div>
+        <ul class="paginList" id="nav_list">
+            <li class="paginItem"><a href="javascript:;"><span class="pagepre"></span></a></li>
+            <li class="paginItem"><a href="javascript:;">首页</a></li>
+            <li class="paginItem"><a href="javascript:;" style="width: 50px">上一页</a></li>
+            <li class="paginItem"><a href="javascript:;" style="width: 50px">下一页</a></li>
+            <li class="paginItem"><a href="javascript:;">尾页</a></li>
+            <li class="paginItem"><a href="javascript:;"><span class="pagenxt"></span></a></li>
+        </ul>
+    </div>
+
+    <!--模态框-->
+    <!-- 模态框（Modal） 添加课程触发的模态框-->
+    <div class="modal fade" id="myModal_add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabe2">
+                        添加课程
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="formbody">
+                        <ul class="forminfo">
+                            <li><label>课程名称：</label><input id="coursename_add" name="coursename" type="text" class="dfinput"
+                                                           value=""/></li>
+                            <li><label>上课时间：</label><input id="time_add" name="time" type="text" class="dfinput" value=""/>
+                            </li>
+                            <li><label>教师工号：</label><input id="account_add" name="account" type="text" class="dfinput" value=""/>
+                            </li>
+                            <li><label>科目：</label><input id="category_add" name="category" type="text" class="dfinput"
+                                                         value=""/></li>
+                            <li><label>所属院系：</label><input id="department_add" name="department" type="text" class="dfinput"
+                                                           value=""/></li>
+                            <li><label>学分：</label><input id="credit_add" name="credit" type="text" class="dfinput" value=""/>
+                            </li>
+                            <li style="text-align: center"> <span id="error_msg" style="color: red"></span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                    </button>
+                    <button type="button" class="btn btn-primary" id="add_Course" onclick="add_course()">
+                        确认添加
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <!--模态框-->
+    <!-- 模态框（Modal） 查看教师信息触发的模态框-->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        教师基本信息
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="formbody">
+                        <ul class="forminfo">
+                            <li><label>姓名：</label><input id="see_name" name="" type="text" class="dfinput" value=""
+                                                         disabled/></li>
+                            <li><label>性别：</label><input id="see_sex" name="" type="text" class="dfinput" value=""
+                                                         disabled/></li>
+                            <li><label>年龄：</label><input id="see_age" name="" type="text" class="dfinput" value=""
+                                                         disabled/></li>
+                            <li><label>Phone：</label><input id="see_Phone" name="" type="text" class="dfinput" value=""
+                                                            disabled/></li>
+                            <li><label>邮箱：</label><input id="see_email" name="" type="text" class="dfinput" value=""
+                                                         disabled/></li>
+                            <li><label>院系：</label><input id="see_department" name="" type="text" class="dfinput" value=""
+                                                         disabled/></li>
+                        </ul>
+                    </div>
+                    <input type="hidden" id="tid" value=""/>
+                    <script type="text/javascript">
+                        var tid = $("#tid").val();
+
+
+                    </script>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+</div>
+<script>
+    //获取URL产的值的方法
+    function getParameter(variable) {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split("=");
+            if (pair[0] == variable) {
+                return pair[1];
+            }
+        }
+        return (false);
+    }
+
+    //每页显示数据
+    var size = $("#number").val();
+    //刷新页面
+    function numberChange(){
+        size = $("#number").val();
+        findCourseAll(1);
+    }
+
+    //主体
+    $(function () {
+        //初始化当前页
+        var pageNo=1;
+        //下级返回的页码数
+        var fanhuiPage=getParameter("page");
+        if (fanhuiPage!=null && fanhuiPage!=""){
+            pageNo=fanhuiPage;
+        }
+        //加载数据,初始数据，不安条件搜索的数据
+        findCourseAll(pageNo);
+        getKindAll();
+
+        //点击搜索按钮触发事件
+        $("#search_btn").click(function () {
+            findCourseByCondition(pageNo);
+        })
+    });
+
+    //获取初始数据
+    function findCourseAll(pageNo=1) {
+        $.get("../course/findCourseByCondition.do", {size, pageNo}, function (data) {
+            if (data.flag) {
+                //总页数
+                var pageSum=data.maxPage;
+                if (pageNo<=0){pageNo=1}
+                if (pageNo>pageSum){pageNo=pageSum}
+                $("#data_msg").empty();
+                $("#data_msg").append(`共<i class="blue">${data.count}</i>条记录，【${pageNo}/${pageSum}页】`);
+                //课程数据处理展示
+                //清空列表
+                $("#course_list").empty();
+                //取出课程数据
+                var list = data.data;
+                //定义一个变量来用于编号
+                var a = 0;
+                for (var i = 0; i < list.length; i++) {
+                    //编号循环
+                    a = a + 1;
+                    var course = list[i];
+                    $("#course_list").append(`
+                            <tr>
+                            <td>${a}</td>
+                            <td>${course.coursename}</td>
+                            <td>${course.t_name}</td>
+                            <td>${course.time}</td>
+                            <td>${course.category}</td>
+                            <td>${course.department}</td>
+                            <td>${course.credit}</td>
+                            <td><a href="../admin/course_see_student.html?c_id=${course.id}&pageNo=${pageNo}" class="tablelink">查看选课学生</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="#" id="see_teacher" class="tablelink" data-toggle="modal" data-target="#myModal" onclick="setid(${course.t_id})">查看教师信息</a>
+                    <a href="#" class="tablelink" onclick="deleteCourse(${course.id})"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="../images/t03.png" style="height: 18px;width: 18px;" title="删除课程"/></a>
+                    </td>
+                           `);
+                }
+
+                    //换页符
+                    $("#nav_list").empty();
+                    $("#nav_list").append(`
+                            <li class="paginItem"><a href="javascript:;"><span class="pagepre"></span></a></li>
+                            <li class="paginItem"><a href="javascript:findCourseAll(1);">首页</a></li>
+                            <li class="paginItem"><a href="javascript:findCourseAll(${pageNo - 1});" style="width: 50px">上一页</a></li>
+                            <li class="paginItem"><a href="javascript:findCourseAll(${pageNo + 1});" style="width: 50px">下一页</a></li>
+                            <li class="paginItem"><a href="javascript:findCourseAll(${pageSum});">尾页</a></li>
+                            <li class="paginItem"><a href="javascript:;"><span class="pagenxt"></span></a></li>
+                            `);
+
+            }
+        }, "json");
+    }
+
+
+    //按条件查询数据(有条件时执行此方法)
+    function findCourseByCondition(pageNo) {
+        //获取搜索的条件
+        var coursename = $("#coursename").val();
+        var t_name = $("#t_name").val();
+        var category = $("#category").val();
+        var department = $("#department").val();
+        if (coursename == "" && t_name == "" && category == "" && department == "") {
+            $("#errormsg").html("请输入查询条件！");
+            findCourseAll(pageNo);
+            setTimeout(function () {
+                $("#errormsg").html("");
+            }, 2000);
+            return false;
+        } else {
+            $("#errormsg").html("");
+        }
+        $.get("../course/findCourseByCondition.do", {
+            coursename,
+            t_name,
+            category,
+            department,
+            size,
+            pageNo
+        }, function (data) {
+            if (data.flag) {
+                var count_condition = data.count;
+                if (count_condition == 0) {
+                    $("#errormsg").html("查询结果为空！");
+                    findCourseAll();
+                    return false;
+                }
+
+                //总页数
+                var pageSum = data.maxPage;
+                if (pageNo<=0){pageNo==1}
+                if (pageNo>pageSum){pageNo=pageSum}
+                $("#data_msg").empty();
+                $("#data_msg").append(`共<i class="blue">${data.count}</i>条记录，【${pageNo}/${pageSum}页】`);
+            }
+            //清空列表
+            $("#course_list").empty();
+            //取出课程数据
+            var list = data.data;
+            //定义一个变量来用于编号
+            var a = 0;
+            for (var i = 0; i < list.length; i++) {
+                //编号循环
+                a = a + 1;
+                var course = list[i];
+                $("#course_list").append(`
+                            <tr>
+                            <td>${a}</td>
+                            <td>${course.coursename}</td>
+                            <td>${course.t_name}</td>
+                            <td>${course.time}</td>
+                            <td>${course.category}</td>
+                            <td>${course.department}</td>
+                            <td>${course.credit}</td>
+                            <td><a href="../admin/course_see_student.html?c_id=${course.id}&pageNo=${pageNo}" class="tablelink">查看选课学生</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="#" id="see_teacher" class="tablelink" data-toggle="modal" data-target="#myModal" onclick="setid(${course.t_id})">查看教师信息</a>
+                             <a href="#" class="tablelink" onclick="deleteCourse(${course.id})"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="../images/t03.png" style="height: 18px;width: 18px;" title="删除课程"/></a>
+                            </td>
+                            </tr>`);
+            }
+                //换页符
+                $("#nav_list").empty();
+                $("#nav_list").append(`
+                            <li class="paginItem"><a href="javascript:;"><span class="pagepre"></span></a></li>
+                            <li class="paginItem"><a href="javascript:findCourseByCondition(1);">首页</a></li>
+                            <li class="paginItem"><a href="javascript:findCourseByCondition(${pageNo - 1});" style="width: 50px">上一页</a></li>
+                            <li class="paginItem"><a href="javascript:findCourseByCondition(${pageNo + 1});" style="width: 50px">下一页</a></li>
+                            <li class="paginItem"><a href="javascript:findCourseByCondition(${pageSum});">尾页</a></li>
+                            <li class="paginItem"><a href="javascript:;"><span class="pagenxt"></span></a></li>
+                            `);
+        }, "json")
+
+    }
+
+
+    //查询全部的类别信息,设置下拉列表
+    function getKindAll() {
+        $.get("../course/getKindAll.do", function (data) {
+            //科目
+            var categoryAll = data.data.categoryAll;
+            $("#category").empty();
+            $("#category").append(`<option value="">--请选择--</option>`);
+            for (var i = 0; i < categoryAll.length; i++) {
+                $("#category").append(`<option value="${categoryAll[i]}">${categoryAll[i]}</option> `);
+            }
+            //院系
+            var departmentAll = data.data.departmentAll;
+            $("#department").empty();
+            $("#department").append(`<option value="">--请选择--</option>`);
+            for (var i = 0; i < departmentAll.length; i++) {
+                $("#department").append(`<option value="${departmentAll[i]}">${departmentAll[i]}</option>`);
+            }
+
+
+        }, "json")
+    }
+
+    /*向教师信息模态框设置初值*/
+    function setid(id) {
+        var tid = id;
+        $.get("../teacher/getTeacherById.do", {tid}, function (data) {
+            if (data.flag) {
+                var teacher = data.data[0];
+                $("#see_name").val(`${teacher.name}`);
+                $("#see_sex").val(`${teacher.sex}`);
+                $("#see_age").val(`${teacher.age}`);
+                $("#see_Phone").val(`${teacher.phone}`);
+                $("#see_email").val(`${teacher.email}`);
+                $("#see_department").val(`${teacher.department}`);
+            }
+        }, "json");
+    }
+    //添加课程的方法
+    function add_course() {
+        var coursename = $("#coursename_add").val();
+        var time = $("#time_add").val();
+        var category = $("#category_add").val();
+        var department = $("#department_add").val();
+        var credit = $("#credit_add").val();
+        var teacher_account = $("#account_add").val();
+        if (coursename=="" && time=="" && category=="" && credit==""&& teacher_account==""){
+            $("#error_msg").html("请输入完整信息!");
+            setTimeout(function () {
+                $("#error_msg").html("");
+            }, 2000);
+            return false;
+        }
+        $.ajax({
+            type:"get",
+            url:"../course/addCourseAdmin.do",
+            data:{coursename,time,category,department,credit,teacher_account},
+            contentType:"application/json;charset=utf-8",
+            success:function (data) {
+                if (data.flag){
+                    confirm(data.msg);
+                    location.href="../admin/course_all.html";
+                } else {
+                    if (data.data==-1) {
+                        $("#error_msg").html(data.msg);
+                        setTimeout(function () {
+                            $("#error_msg").html("");
+                        }, 2000);
+                    }
+                    if (data.data==-2) {
+                        $("#error_msg").html(data.msg);
+                        setTimeout(function () {
+                            $("#error_msg").html("");
+                        }, 2000);
+                    }
+                    if (data.data==0) {
+                        $("#error_msg").html(data.msg);
+                        setTimeout(function () {
+                            $("#error_msg").html("");
+                        }, 2000);
+                    }
+
+                }
+            }
+
+        })
+    }
+    //删除课程的方法
+    function deleteCourse(id) {
+        if (confirm("确定要删除吗？")) {
+            $.ajax({
+                type: "get",
+                url: "../course/deleteCourse.do",
+                data: {id},
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                    location.href = "../admin/course_all.html";
+                }
+            });
+        }
+    }
+
+
+    //数据导出
+    function tableToExcel() {
+        //获取数据
+        $.get("../course/getAllCourse.do",function (data) {
+            const jsonData=data;
+            //列标题，逗号隔开，每一个逗号就是隔开一个单元格
+            let str = `课程名称,院系,上课时间,授课教师,科目类别,学分\n`;
+            //增加\t为了不让表格显示科学计数法或者其他格式
+            for(let i = 0 ; i < jsonData.length ; i++ ){
+                for(let item in jsonData[i]){
+                    str+=`${jsonData[i][item] + '\t'},`;
+                }
+                str+='\n';
+            }
+            //encodeURIComponent解决中文乱码
+            let uri = 'data:text/csv;charset=utf-8,\ufeff' + encodeURIComponent(str);
+            //通过创建a标签实现
+            let link = document.createElement("a");
+            link.href = uri;
+            //对下载的文件命名
+            link.download =  "全部课程数据表.csv";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        },"json")
+    }
+
+</script>
+
+</body>
+</html>

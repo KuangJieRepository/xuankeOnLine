@@ -1,0 +1,344 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link href="../css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="../css/select.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="../js/jquery.js"></script>
+    <script type="text/javascript" src="../js/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/jquery.idTabs.min.js"></script>
+    <script type="text/javascript" src="../js/select-ui.min.js"></script>
+    <script type="text/javascript" src="../editor/kindeditor.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+
+</head>
+
+
+<body>
+
+<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+        <li><a href="#">课程管理</a></li>
+        <li><a href="#">我的课程</a></li>
+    </ul>
+</div>
+<div class="rightinfo">
+
+    <ul class="toolbar">
+        <li class="click"><a onclick="addCourse()" href="#" class="tablelink" data-toggle="modal"
+                             data-target="#myModal_add"><span><img src="../images/t01.png"/></span>添加课程</a></li>
+    </ul>
+
+</div>
+<div class="rightinfo">
+    <table class="tablelist">
+        <thead>
+        <tr>
+            <th style="width:5%">编号</th>
+            <th style="width: 10%">课程名称</th>
+            <th style="width: 25%">上课时间</th>
+            <th style="width: 10%">科目</th>
+            <th style="width: 15%">所护院系</th>
+            <th style="width: 10%">学分</th>
+            <th style="width: 15%">操作</th>
+        </tr>
+        </thead>
+        <tbody id="course_list">
+        <tr>
+            <td>1</td>
+            <td>Java程序设计</td>
+            <td>星期一【上午12节】周三【下午56节】</td>
+            <td>Java</td>
+            <td>信息工程学院</td>
+            <td>5</td>
+            <td><a href="#" class="tablelink"><img src="../images/t02.png" style="height: 18px;width: 18px;"/>&nbsp;&nbsp;&nbsp;</a>
+                <a href="#" class="tablelink"><img src="../images/t03.png" style="height: 18px;width: 18px;"/></a></td>
+        </tr>
+        </tbody>
+    </table>
+
+
+    <!--模态框-->
+    <!-- 模态框（Modal） 添加课程触发的模态框-->
+    <div class="modal fade" id="myModal_add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        添加课程
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="formbody">
+                        <ul class="forminfo">
+                            <li><label>课程名称：</label><input id="coursename_add" name="" type="text" class="dfinput"
+                                                           value=""/></li>
+                            <li><label>上课时间：</label><input id="time_add" name="" type="text" class="dfinput" value=""/>
+                            </li>
+                            <li><label>科目：</label><input id="category_add" name="" type="text" class="dfinput"
+                                                         value=""/></li>
+                            <li><label>所属院系：</label><input id="department_add" name="" type="text" class="dfinput"
+                                                           value=""
+                                                           disabled/></li>
+                            <li><label>学分：</label><input id="credit_add" name="" type="text" class="dfinput" value=""/>
+                        </li>
+                            <li style="text-align: center"> <span id="error_msg" style="color: red"></span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                    </button>
+                    <button type="button" class="btn btn-primary" id="add_Course">
+                        确认添加
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+
+    <!--模态框-->
+    <!-- 模态框（Modal） 修改课程触发的模态框-->
+    <div class="modal fade" id="myModal_update" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel_update">
+                        修改课程信息
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="formbody">
+                        <ul class="forminfo">
+                            <li><label>课程名称：</label><input id="coursename_update" name="" type="text" class="dfinput"
+                                                           value=""/></li>
+                            <li><label>上课时间：</label><input id="time_update" name="" type="text" class="dfinput"
+                                                           value=""/></li>
+                            <li><label>科目：</label><input id="category_update" name="" type="text" class="dfinput"
+                                                         value=""/></li>
+                            <li><label>所属院系：</label><input id="department_update" id="" name="" type="text"
+                                                           class="dfinput" value=""
+                                                           disabled/></li>
+                            <li><label>学分：</label><input id="credit_update" name="" type="text" class="dfinput"
+                                                         value=""/></li>
+                            <li><input type="hidden" value="" id="course_id_update"/></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                    </button>
+                    <button type="button" class="btn btn-primary" id="updateCourse">
+                        提交更改
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+</div>
+<script>
+    //获取URL产的值的方法
+    function getParameter(variable) {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split("=");
+            if (pair[0] == variable) {
+                return pair[1];
+            }
+        }
+        return (false);
+    }
+
+    //根据教师自己的id查询自己课程的方法
+    function findMyCourse(id) {
+        $.get("../course/getCourse.do", {id}, function (data) {
+            var ownid = id;
+            if (data.flag) {
+                //取出课程数据
+                var list = data.data;
+                //定义一个变量来用于编号
+                var a = 0;
+                //将原始数据清空
+                $("#course_list").empty();
+                for (var i = 0; i < list.length; i++) {
+                    //编号循环
+                    a = a + 1;
+                    var course = list[i];
+                    $("#course_list").append(`
+                            <tr>
+                            <td>${a}</td>
+                            <td>${course.coursename}</td>
+                            <td>${course.time}</td>
+                            <td>${course.category}</td>
+                            <td>${course.department}</td>
+                            <td>${course.credit}</td>
+                            <td>
+                            <a href="../teacher/course_see_student.html?c_id=${course.id}&flag=1&tid=${id}" class="tablelink"><img src="../icon/png/member.png" style="height: 18px;width: 18px;" title="查看选课学生信息"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                            <a href="#" class="tablelink" onclick="getCourseById(${course.id})"><img src="../images/t02.png" style="height: 18px;width: 18px;" title="修改课程信息" data-toggle="modal" data-target="#myModal_update"/>&nbsp;&nbsp;&nbsp;</a>
+                   <a href="#" class="tablelink" onclick="deleteCourse(${course.id},${ownid})"> &nbsp;&nbsp;&nbsp;&nbsp;<img src="../images/t03.png" style="height: 18px;width: 18px;" title="删除课程"/></a></td>
+                            </tr>`);
+
+                }
+            }
+        }, "json");
+    }
+
+    //删除课程的方法
+    function deleteCourse(id, ownid) {
+        if (confirm("确定要删除吗？")) {
+            $.ajax({
+                type: "get",
+                url: "../course/deleteCourse.do",
+                data: {id},
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                    location.href = "../teacher/course_my.html?ownid=" + ownid;
+                }
+            });
+        }
+    }
+
+
+    //添加课程的方法(添加课程第一步，显示模态内数据)
+    function addCourse() {
+        $.get("../getSession.do", function (data) {
+            if (data.flag) {
+                $("#department_add").val(data.data.department);
+            }
+        }, "json")
+    }
+
+    //添加课程的方法
+    function add_course(teacher_id) {
+        var coursename = $("#coursename_add").val();
+        var time = $("#time_add").val();
+        var category = $("#category_add").val();
+        var department = $("#department_add").val();
+        var credit = $("#credit_add").val();
+        if (coursename=="" && time=="" && category=="" && credit==""){
+            $("#error_msg").html("请输入完整信息!");
+            setTimeout(function () {
+                $("#error_msg").html("");
+            }, 2000);
+            return false;
+        }
+        $.ajax({
+            type:"get",
+            url:"../course/addCourseT.do",
+            data:{coursename,time,category,department,credit,teacher_id},
+            contentType:"application/json;charset=utf-8",
+            success:function (data) {
+                if (data.flag){
+                    confirm(data.msg);
+                    location.href="../teacher/course_my.html?ownid="+teacher_id;
+                } else {
+                    $("#error_msg").html("该课程已存在!");
+                    setTimeout(function () {
+                        $("#error_msg").html("");
+                    }, 2000);
+                }
+            }
+
+        })
+    }
+
+    //根据课程id获取课程信息，将其显示在修改课程的模态框中(修改课程第一步)
+    function getCourseById(id) {
+        $.get("../course/getCourseById.do", {id}, function (data) {
+            if (data.flag) {
+                $("#coursename_update").val(data.data.coursename);
+                $("#time_update").val(data.data.time);
+                $("#category_update").val(data.data.category);
+                $("#credit_update").val(data.data.credit);
+                $("#course_id_update").val(data.data.id);
+                $.get("../getSession.do", function (data) {
+                    if (data.flag) {
+                        $("#department_update").val(data.data.department);
+                    }
+                }, "json")
+            }
+        }, "json")
+
+    }
+
+    //修改课程的方法
+    function updateCourse(course_id, teacher_id) {
+        var coursename = $("#coursename_update").val();
+        var time = $("#time_update").val();
+        var category = $("#category_update").val();
+        var department = $("#department_update").val();
+        var credit = $("#credit_update").val();
+        var course_id = $("#course_id_update").val();
+        $.ajax({
+            type: "get",
+            url: "../course/updateCourseById.do",
+            data: {coursename, time, category, department, credit, course_id, teacher_id},
+            contentType: "application/json;charset=utf-8",
+            success: function (data) {
+                confirm("修改成功！");
+                location.href = "../teacher/course_my.html?ownid=" + teacher_id;
+
+            }
+        })
+
+
+    }
+
+
+    //主
+    $(function () {
+        var t_id = getParameter("ownid");
+        //加载数据
+        findMyCourse(t_id);
+
+        //添加课程按钮点击触发事件
+        $("#add_Course").click(function () {
+            $.get("../getSession.do", function (data) {
+                if (data.flag) {
+                    //教师id
+                    var teacher_id = data.data.id;
+                    //添加课程信息
+                    add_course(teacher_id);
+                }
+            }, "json")
+
+        });
+
+        //修改课程信息点击触发事件
+        $("#updateCourse").click(function () {
+            $.get("../getSession.do", function (data) {
+                if (data.flag) {
+                    //教师id
+                    var teacher_id = data.data.id;
+                    //课程id
+                    var course_id = $("#course_id_update").val();
+                    //修改课程信息
+                    updateCourse(course_id, teacher_id);
+                }
+
+            }, "json")
+        });
+
+
+    });
+
+
+</script>
+
+</body>
+</html>

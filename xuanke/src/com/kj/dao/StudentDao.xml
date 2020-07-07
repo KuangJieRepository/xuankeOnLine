@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis. org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kj.dao.StudentDao">
+    <!--管理员添加学生-->
+    <insert id="addStudentAdmin" parameterType="Student">
+        insert into student(account,password,sex,age,phone,email,department,name,classname)
+        values(#{account},#{password},#{sex},#{age},#{phone},#{email},#{department},#{name},#{classname})
+    </insert>
+    <!--/*修改个人信息*/-->
+    <update id="updateMsg" parameterType="Student">
+        update student
+        <set>
+            <if test="password!=''">
+                password=#{password},
+            </if>
+            <if test="name!=''">
+                name=#{name},
+            </if>
+            <if test="sex!=''">
+                sex=#{sex},
+            </if>
+            <if test="age!=''">
+                age=#{age},
+            </if>
+            <if test="phone!=''">
+                phone=#{phone},
+            </if>
+            <if test="email!=''">
+                email=#{email},
+            </if>
+            <if test="classname!=''">
+                classname=#{classname}
+            </if>
+        </set>
+        where id=#{id}
+
+    </update>
+    <!--管理员-修改-学生-->
+    <update id="updateStudentAdmin" parameterType="Student">
+        update student
+        <set>
+            <if test="account!=''">
+                account=#{account},
+            </if>
+            <if test="password!=''">
+                password=#{password},
+            </if>
+            <if test="name!=''">
+                name=#{name},
+            </if>
+            <if test="sex!=''">
+                sex=#{sex},
+            </if>
+            <if test="age!=''">
+                age=#{age},
+            </if>
+            <if test="phone!=''">
+                phone=#{phone},
+            </if>
+            <if test="email!=''">
+                email=#{email},
+            </if>
+            <if test="classname!=''">
+                classname=#{classname},
+            </if>
+            <if test="department!=''">
+                department=#{department}
+            </if>
+        </set>
+        where id=#{id}
+
+    </update>
+    <!--根据id删除学生-->
+    <delete id="deleteStudent" parameterType="integer">
+        delete from student where id=#{id}
+    </delete>
+    <!--根据课程id查询选课的学生-->
+    <select id="findStudentByCourseId" parameterType="int" resultType="Student">
+        select student.id,account,`name`,sex,age,phone,email,student.department,classname
+         from student,course,s_c
+         where student.id=s_c.s_id
+         and course.id=s_c.c_id
+         and course.id=#{id}
+         limit #{start},#{size}
+    </select>
+    <!--查询出这些学生的总数-->
+    <select id="getCountByid" parameterType="int" resultType="Integer">
+         select count(*)
+         from student,course,s_c
+         where student.id=s_c.s_id
+         and course.id=s_c.c_id
+         and course.id=#{id}
+    </select>
+    <!--根据id查询学生信息-->
+    <select id="getStudentById" resultType="Student">
+        select * from student where id=#{sid}
+    </select>
+    <!--查询出总数量（有条件时，查询条件查询的总数）-->
+    <select id="getCount" resultType="java.lang.Integer">
+        select count(*) from student
+        <where>
+            <if test="name!='' and name!=null">
+                and name like "%"#{name}"%"
+            </if>
+            <if test="classname!='' and classname!=null">
+                and classname=#{classname}
+            </if>
+            <if test="department!='' and department!=null">
+                and department=#{department}
+            </if>
+        </where>
+    </select>
+    <!--分页查询出学生数据（有条件时按条件分页查询）-->
+    <select id="findStudentAll" resultType="com.kj.po.Student">
+        select * from student
+        <where>
+            <if test="name!='' and name!=null">
+                and name like "%"#{name}"%"
+            </if>
+            <if test="classname!='' and classname!=null ">
+                and classname=#{classname}
+            </if>
+            <if test="department!='' and department!=null">
+                and department=#{department}
+            </if>
+        </where>
+        limit #{start},#{size}
+    </select>
+    <!--添加==1根据账号、密码、真实姓名,进行判断是否已经存在-->
+    <select id="findStudent" resultType="Integer">
+        select count(*)
+        from student
+        where name=#{name}
+        and account=#{account}
+        and password=#{password}
+    </select>
+    <select id="getAllStudentByCid" resultType="com.kj.export.StudentExport">
+        select name,sex,age,phone,email,classname,student.department
+        from student,course,s_c
+        where s_c.c_id=course.id
+        and s_c.s_id=student.id
+        and course.id=#{cid}
+    </select>
+
+</mapper>

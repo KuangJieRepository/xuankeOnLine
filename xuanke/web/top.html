@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>无标题文档</title>
+    <link href="css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="icon/iconfont.css" rel="stylesheet" type="text/css"/>
+    <script language="JavaScript" src="js/jquery.js"></script>
+    <script>
+        $.get("getSession.do",function (data) {
+            if (data.flag) {
+                //获取身份
+                var identity=data.data.identity;
+                //决定去向
+                if (identity=="admin"){
+                    var aid=data.data.id;
+                    $.get("admin/getAdminById.do",{aid},function (data) {
+                        if (data.flag){
+                            var username = data.data[0].name;
+                            $("#username").html(`欢迎【${username}(管理员)】`);
+                            $("#own_image").attr("src",`upload/${data.data[0].image}`)
+                        }
+                    },"json");
+                }
+                if (identity=="teacher"){
+                    var tid=data.data.id;
+                    $.get("teacher/getTeacherById.do",{tid},function (data) {
+                        if (data.flag){
+                            var username = data.data[0].name;
+                            $("#username").html(`欢迎【${username}(教师)】`);
+                            $("#own_image").attr("src",`upload/${data.data[0].image}`)
+                        }
+                    },"json");
+                }
+                if (identity=="student"){
+                    var sid=data.data.id;
+                    $.get("student/getStudentById.do",{sid},function (data) {
+                        if (data.flag){
+                            var username = data.data[0].name;
+                            $("#username").html(`欢迎【${username}(学生)】`);
+                            $("#own_image").attr("src",`upload/${data.data[0].image}`)
+                        }
+                    },"json");
+                }
+
+
+            }
+        }, "json");
+
+
+    </script>
+</head>
+<body style="background:url(images/topbg.gif) repeat-x;">
+<div class="topleft">
+    <a href="teacher/main.html" target="_parent"><img src="images/logo.png" title="系统首页"/></a>
+</div>
+
+
+<div class="topright" style="margin-top: 20px">
+    <img src="" id="own_image"  style="width: 45px;height: 45px;border-radius: 50%;" alt="头像空"/>
+    <div class="user">
+        <span id="username">欢迎【admin】</span>
+        <i onclick="" class="iconfont icontuichu" style="color:#b8ceda"></i>
+        <a href="logout.do" target="_parent" onclick="return confirm('确定要退出吗？')"
+           style="width:137px;height:35px; font-size:14px;font-weight:bold;cursor:pointer;color: #b8ceda">退出</a>
+    </div>
+
+
+</div>
+</body>
+
+</html>

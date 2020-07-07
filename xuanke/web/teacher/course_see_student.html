@@ -1,0 +1,247 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link href="../css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="../css/select.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="../js/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/jquery.idTabs.min.js"></script>
+    <script type="text/javascript" src="../js/select-ui.min.js"></script>
+    <script type="text/javascript" src="../editor/kindeditor.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function (e) {
+            $(".select1").uedSelect({
+                width: 345
+            });
+            $(".select2").uedSelect({
+                width: 167
+            });
+            $(".select3").uedSelect({
+                width: 200
+            });
+            $(".select4").uedSelect({
+                width: 60
+            });
+        });
+    </script>
+
+<script>
+   $(function () {
+       var page= getParameter("pageNo");
+       var flag= getParameter("flag");
+       var ownid= getParameter("tid");
+        $("#topnav").append(`
+        <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="../teacher/course_all.html?page=${page}"><img src="../icon/fanhui.png"style="width: 23px"
+          alt="返回上一级" title="返回上一级"/></a></li>
+        `);
+
+        if (flag==1){
+            $("#topnav").empty();
+            $("#topnav").append(`
+        <li><a href="#">课程管理</a></li>
+        <li><a href="../teacher/course_my.html?ownid=${ownid}">我的课程</a></li>
+        <li><a href="#">查看选课学生</a></li>
+        <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="../teacher/course_my.html?page=${page}&ownid=${ownid}"><img src="../icon/fanhui.png"style="width: 23px"
+          alt="返回上一级" title="返回上一级"/></a></li>
+        `);
+        }
+   })
+</script>
+
+</head>
+
+
+<body>
+
+<div class="place">
+    <span>位置：</span>
+    <ul class="placeul" id="topnav">
+        <li><a href="#">课程管理</a></li>
+        <li><a href="../teacher/course_all.html">全部课程</a></li>
+        <li><a href="#">查看选课学生</a></li>
+
+    </ul>
+</div>
+
+<div class="rightinfo">
+
+    <!--模糊搜索-->
+    <div class="tools">
+        <ul class="seachform" style="" >
+            <li><label>条数</label>
+                <div class="vocation">
+                    <select class="select4" name="department" id="number" onchange="numberChange()">
+                        <option value="5">5</option>
+                        <option value="10" selected="selected">10</option>
+                        <option value="15">15</option>
+                    </select>
+                </div>
+            </li>
+            <li><input  type="button" class="scbtn" style="width: 89px" onclick="tableToExcel($('#courseId').val())" value="选课学生导出"/></a></li>
+
+        </ul>
+    </div>
+    <table class="tablelist">
+        <thead>
+        <tr>
+            <th style="width: 5%">编号</th>
+            <th style="width: 10%">姓名</th>
+            <th style="width: 5%">性别</th>
+            <th style="width: 5%">年龄</th>
+            <th style="width: 15%">Phone</th>
+            <th style="width: 15%">邮箱</th>
+            <th style="width: 15%">班级</th>
+            <th style="width: 15%">院系</th>
+        </tr>
+        </thead>
+        <tbody id="student_list">
+        <tr>
+            <td>1</td>
+            <td>Java程序设计</td>
+            <td>匡杰</td>
+            <td>星期一【上午12节】周三【下午56节】</td>
+            <td>Java</td>
+            <td>信息工程学院</td>
+            <td>5</td>
+            <td><a href="#" class="tablelink"><img src="../images/t02.png" style="height: 18px;width: 18px;"/>&nbsp;&nbsp;&nbsp;</a>
+                <a href="#" class="tablelink"> <img src="../images/t03.png" style="height: 18px;width: 18px;"/></a></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="pagin">
+        <div class="message" id="data_msg">共<i class="blue">1256</i>条记录，【1/19页】</div>
+        <ul class="paginList" id="nav_list">
+            <li class="paginItem"><a href="javascript:;"><span class="pagepre"></span></a></li>
+            <li class="paginItem"><a href="javascript:;">首页</a></li>
+            <li class="paginItem"><a href="javascript:;" style="width: 50px">上一页</a></li>
+            <li class="paginItem"><a href="javascript:;" style="width: 50px">下一页</a></li>
+            <li class="paginItem"><a href="javascript:;">尾页</a></li>
+            <li class="paginItem"><a href="javascript:;"><span class="pagenxt"></span></a></li>
+        </ul>
+    </div>
+    <input type="hidden" value="" id="courseId"/>
+</div>
+<script>
+    //每页显示数据
+    var size = $("#number").val();
+    var courseId=$("#courseId").val();
+    //刷新页面
+    function numberChange(){
+        size = $("#number").val();
+        findStudentByid(courseId,1);
+    }
+
+    //按课程id查询出选这节课的学生
+    function findStudentByid(id,pageNo=1) {
+        $.ajax({
+            type:"get",
+            url:"../student/findStudentByCourseId.do",
+            data:{id,pageNo,size},
+            contentType:"application/json;charset=utf-8",
+            success:function (data) {
+                if (data.flag){
+                    //用于编号显示
+                    var sum=0;
+                    var studentList = data.data;
+                    $("#student_list").empty();
+                    for (var i = 0; i < studentList.length; i++) {
+                        sum=sum+1;
+                        var student = studentList[i];
+                        $("#student_list").append(`
+                     <tr>
+                     <td>${sum}</td>
+                     <td>${student.name}</td>
+                     <td>${student.sex}</td>
+                     <td>${student.age}</td>
+                     <td>${student.phone}</td>
+                     <td>${student.email}</td>
+                     <td>${student.classname}</td>
+                     <td>${student.department}</td>
+                     </tr>
+                    `);
+                    }
+                    //显示多少数据部分
+                    if (pageNo<=0){pageNo=1}
+                    if (pageNo>data.maxPage){pageNo=data.maxPage}
+                    $("#data_msg").empty();
+                    $("#data_msg").append(`
+                    共<i class="blue">${data.count}</i>条记录，【${pageNo}/${data.maxPage}页】
+                    `);
+
+                    //换页符部分
+                    $("#nav_list").empty();
+                    $("#nav_list").append(`
+                    <li class="paginItem"><a href="javascript:;"><span class="pagepre"></span></a></li>
+                    <li class="paginItem"><a href="javascript:findStudentByid(${id},1);">首页</a></li>
+                    <li class="paginItem"><a href="javascript:findStudentByid(${id},${pageNo-1});" style="width: 50px">上一页</a></li>
+                    <li class="paginItem"><a href="javascript:findStudentByid(${id},${pageNo+1});" style="width: 50px">下一页</a></li>
+                    <li class="paginItem"><a href="javascript:findStudentByid(${id},${data.maxPage});">尾页</a></li>
+                    <li class="paginItem"><a href="javascript:;"><span class="pagenxt"></span></a></li>
+                    `);
+                }
+            },
+        });
+    }
+
+
+    //获取URL产的值的方法
+    function getParameter(variable) {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split("=");
+            if (pair[0] == variable) {
+                return pair[1];
+            }
+        }
+        return (false);
+    }
+
+
+    $(function () {
+        var course_id = getParameter("c_id");
+        $("#courseId").val(course_id);
+        //执行方法，加载数据
+        findStudentByid(course_id);
+
+    });
+
+    //数据导出
+    function tableToExcel(cid) {
+        //获取数据
+        $.get("../student/getAllStudentByCid.do",{cid},function (data) {
+            const jsonData=data;
+            //列标题，逗号隔开，每一个逗号就是隔开一个单元格
+            let str = `姓名,性别,年龄,电话,邮箱,班级,院系\n`;
+            //增加\t为了不让表格显示科学计数法或者其他格式
+            for(let i = 0 ; i < jsonData.length ; i++ ){
+                for(let item in jsonData[i]){
+                    str+=`${jsonData[i][item] + '\t'},`;
+                }
+                str+='\n';
+            }
+            //encodeURIComponent解决中文乱码
+            let uri = 'data:text/csv;charset=utf-8,\ufeff' + encodeURIComponent(str);
+            //通过创建a标签实现
+            let link = document.createElement("a");
+            link.href = uri;
+            //对下载的文件命名
+            link.download =  "选课学生数据表.csv";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        },"json")
+    }
+
+
+</script>
+</div>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis. org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kj.dao.TeacherDao">
+    <!--管理员添加教师-->
+    <insert id="addTeacherAdmin" parameterType="Teacher">
+        insert into teacher(account,password,sex,age,phone,email,department,name)
+        values(#{account},#{password},#{sex},#{age},#{phone},#{email},#{department},#{name})
+    </insert>
+    <!--修改个人教师信息*/-->
+    <update id="updateMsg" parameterType="Teacher">
+        update teacher
+        <set>
+            <if test="password!=''">
+                password=#{password},
+            </if>
+            <if test="name!=''">
+                name=#{name},
+            </if>
+            <if test="sex!=''">
+                sex=#{sex},
+            </if>
+            <if test="age!=''">
+                age=#{age},
+            </if>
+            <if test="phone!=''">
+                phone=#{phone},
+            </if>
+            <if test="email!=''">
+                email=#{email}
+            </if>
+        </set>
+        where id=#{id}
+
+    </update>
+    <!--管理员-修改-教师-->
+    <update id="updateTeacherAdmin">
+        update teacher
+        <set>
+            <if test="account!=''">
+                account=#{account},
+            </if>
+            <if test="password!=''">
+                password=#{password},
+            </if>
+            <if test="name!=''">
+                name=#{name},
+            </if>
+            <if test="sex!=''">
+                sex=#{sex},
+            </if>
+            <if test="age!=''">
+                age=#{age},
+            </if>
+            <if test="phone!=''">
+                phone=#{phone},
+            </if>
+            <if test="email!=''">
+                email=#{email},
+            </if>
+            <if test="department!=''">
+                department=#{department}
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+    <!--根据id删除教师-->
+    <delete id="deleteTeacher">
+        delete from teacher where id=#{id}
+    </delete>
+    <!--根据id查询教师信息-->
+    <select id="getTeacherById" parameterType="integer" resultType="Teacher">
+        select *
+        from teacher
+        where id=#{tid}
+    </select>
+    <!--查询出这些学生的总数-->
+    <select id="getCount" resultType="java.lang.Integer">
+        select count(*) from teacher
+        <where>
+            <if test="name!='' and name!=null">
+                and name like "%"#{name}"%"
+            </if>
+            <if test="department!='' and department!=null">
+                and department=#{department}
+            </if>
+        </where>
+    </select>
+    <!--分页查询出学生数据（有条件时按条件分页查询）-->
+    <select id="findTeacherAll" resultType="com.kj.po.Teacher">
+        select * from teacher
+        <where>
+            <if test="name!='' and name!=null">
+                and name like "%"#{name}"%"
+            </if>
+            <if test="department!='' and department!=null">
+                and department=#{department}
+            </if>
+        </where>
+        limit #{start},#{size}
+    </select>
+    <!--添加1根据账号、密码、真实姓名,进行判断是否已经存在-->
+    <select id="findTeacher" resultType="java.lang.Integer">
+        select count(*)
+        from teacher
+        where name=#{name}
+        and account=#{account}
+        and password=#{password}
+    </select>
+</mapper>

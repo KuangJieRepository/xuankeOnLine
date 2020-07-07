@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link href="../css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="../css/select.css" rel="stylesheet" type="text/css"/>
+    <link rel="shortcut icon" href="images/tu.ico" type="image/x-icon" />
+    <script type="text/javascript" src="../js/jquery.js"></script>
+    <script type="text/javascript" src="../js/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/jquery.idTabs.min.js"></script>
+    <script type="text/javascript" src="../js/select-ui.min.js"></script>
+    <script type="text/javascript" src="../editor/kindeditor.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+
+</head>
+
+
+<body>
+
+<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+        <li><a href="#">课程管理</a></li>
+        <li><a href="#">我的课程</a></li>
+    </ul>
+</div>
+<div class="rightinfo">
+    <table class="tablelist">
+        <thead>
+        <tr>
+            <th style="width:5%">编号</th>
+            <th style="width: 10%">课程名称</th>
+            <th style="width: 10%">授课教师</th>
+            <th style="width: 25%">上课时间</th>
+            <th style="width: 10%">科目</th>
+            <th style="width: 15%">所护院系</th>
+            <th style="width: 5%">学分</th>
+            <th style="width: 10%">操作</th>
+        </tr>
+        </thead>
+        <tbody id="course_list">
+        <tr>
+            <td>1</td>
+            <td>Java程序设计</td>
+            <td>星期一【上午12节】周三【下午56节】</td>
+            <td>Java</td>
+            <td>信息工程学院</td>
+            <td>5</td>
+            <td><a href="#" class="tablelink"><img src="../images/t02.png" style="height: 18px;width: 18px;"/>&nbsp;&nbsp;&nbsp;</a>
+                <a href="#" class="tablelink"><img src="../images/t03.png" style="height: 18px;width: 18px;"/></a></td>
+        </tr>
+        </tbody>
+    </table>
+
+
+
+
+
+</div>
+<script>
+    //获取URL产的值的方法
+    function getParameter(variable) {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split("=");
+            if (pair[0] == variable) {
+                return pair[1];
+            }
+        }
+        return (false);
+    }
+
+    //根据学生自己的id查询自己课程的方法
+    function findMyCourse(id) {
+        $.get("../course/getCourseS.do", {id}, function (data) {
+            var ownid = id;
+            if (data.flag) {
+                //取出课程数据
+                var list = data.data;
+                //定义一个变量来用于编号
+                var a = 0;
+                //将原始数据清空
+                $("#course_list").empty();
+                for (var i = 0; i < list.length; i++) {
+                    //编号循环
+                    a = a + 1;
+                    var course = list[i];
+                    $("#course_list").append(`
+                            <tr>
+                            <td>${a}</td>
+                            <td>${course.coursename}</td>
+                            <td>${course.t_name}</td>
+                            <td>${course.time}</td>
+                            <td>${course.category}</td>
+                            <td>${course.department}</td>
+                            <td>${course.credit}</td>
+                            <td>
+                            <a href="../student/course_see_student.html?c_id=${course.id}&flag=2&id=${id}" class="tablelink"><img src="../icon/png/member.png" style="height: 18px;width: 18px;" title="查看选课学生信息"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                     <a href="#" class="tablelink" onclick="deleteCourse(${course.id},${ownid})"> &nbsp;&nbsp;&nbsp;&nbsp;<img src="../images/t03.png" style="height: 18px;width: 18px;" title="删除课程"/></a></td>
+                            </tr>`);
+
+                }
+            }
+        }, "json");
+    }
+
+    //删除课程的方法
+    function deleteCourse(id, ownid) {
+        if (confirm("确定要删除吗？")) {
+            $.ajax({
+                type: "get",
+                url: "../course/deleteCourseStudent.do",
+                data: {id,ownid},
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                    location.href = "../student/course_my.html?ownid=" + ownid;
+                }
+            });
+        }
+    }
+
+
+
+
+    //主
+    $(function () {
+        var s_id = getParameter("ownid");
+        //加载数据
+        findMyCourse(s_id);
+
+
+    });
+
+
+</script>
+
+</body>
+</html>
